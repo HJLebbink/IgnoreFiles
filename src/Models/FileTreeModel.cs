@@ -15,12 +15,12 @@ namespace IgnoreFiles.Models
 
         public FileTreeModel(string fullPath, FileTree root, bool isFile)
         {
-            IsExpanded = true;
-            _children = new List<FileTreeModel>();
-            Root = root;
-            Name = Path.GetFileName(fullPath);
-            IsFile = isFile;
-            FullPath = fullPath;
+            this.IsExpanded = true;
+            this._children = new List<FileTreeModel>();
+            this.Root = root;
+            this.Name = Path.GetFileName(fullPath);
+            this.IsFile = isFile;
+            this.FullPath = fullPath;
             int lastSlash = fullPath.LastIndexOfAny(new[] { '/', '\\' });
 
             //Normally this would be -1, but if the path starts with / or \, we don't want to make an empty entry
@@ -30,30 +30,30 @@ namespace IgnoreFiles.Models
 
                 if(!string.IsNullOrEmpty(parentFullPath))
                 {
-                    Parent = root.GetModelFor(parentFullPath, false);
-                    Parent?.Children?.Add(this);
+                    this.Parent = root.GetModelFor(parentFullPath, false);
+                    this.Parent?.Children?.Add(this);
                 }
             }
         }
 
         public void ItemDoubleClicked(object sender, MouseButtonEventArgs e)
         {
-            if (IsFile)
+            if (this.IsFile)
             {
-                IgnorePackage.DTE.ItemOperations.OpenFile(FullPath);
+                IgnorePackage.DTE.ItemOperations.OpenFile(this.FullPath);
             }
         }
 
         public ImageSource CachedIcon { get; set; }
 
-        public List<FileTreeModel> Children => _children;
+        public List<FileTreeModel> Children => this._children;
 
         public bool IsFile { get; }
 
         public string Name
         {
-            get { return _name; }
-            set { Set(ref _name, value, StringComparer.Ordinal); }
+            get { return this._name; }
+            set { this.Set(ref this._name, value, StringComparer.Ordinal); }
         }
 
         public FileTreeModel Parent { get; }
@@ -64,13 +64,13 @@ namespace IgnoreFiles.Models
 
         public bool IsExpanded
         {
-            get { return _isExpanded; }
-            set { Set(ref _isExpanded, value); }
+            get { return this._isExpanded; }
+            set { this.Set(ref this._isExpanded, value); }
         }
 
         public void SortChildren()
         {
-            _children = _children.OrderBy(x => x.IsFile).ThenBy(x => x.Name, StringComparer.OrdinalIgnoreCase).ToList();
+            this._children = this._children.OrderBy(x => x.IsFile).ThenBy(x => x.Name, StringComparer.OrdinalIgnoreCase).ToList();
         }
     }
 }

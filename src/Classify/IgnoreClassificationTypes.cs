@@ -30,9 +30,9 @@ namespace IgnoreFiles
     {
         public IgnoreBoldFormatDefinition()
         {
-            ForegroundBrush = Brushes.OrangeRed;
-            IsBold = true;
-            DisplayName = "Ignore Keyword";
+            this.ForegroundBrush = Brushes.OrangeRed;
+            this.IsBold = true;
+            this.DisplayName = "Ignore Keyword";
         }
     }
 
@@ -45,8 +45,8 @@ namespace IgnoreFiles
     {
         public IgnorePathFormatDefinition()
         {
-            ForegroundBrush = Brushes.SteelBlue;
-            DisplayName = "Ignore Path";
+            this.ForegroundBrush = Brushes.SteelBlue;
+            this.DisplayName = "Ignore Path";
         }
     }
 
@@ -59,8 +59,8 @@ namespace IgnoreFiles
     {
         public IgnorePathNoMatchFormatDefinition()
         {
-            ForegroundOpacity = 0.4;
-            DisplayName = "Ignore Path No Match";
+            this.ForegroundOpacity = 0.4;
+            this.DisplayName = "Ignore Path No Match";
         }
     }
 }

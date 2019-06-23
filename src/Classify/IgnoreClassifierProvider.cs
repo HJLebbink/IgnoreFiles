@@ -21,9 +21,9 @@ namespace IgnoreFiles
         {
             ITextDocument document;
 
-            if (TextDocumentFactoryService.TryGetTextDocument(buffer, out document))
+            if (this.TextDocumentFactoryService.TryGetTextDocument(buffer, out document))
             {
-                var classifier = buffer.Properties.GetOrCreateSingletonProperty(() => new IgnoreClassifier(Registry, buffer, document.FilePath));
+                var classifier = buffer.Properties.GetOrCreateSingletonProperty(() => new IgnoreClassifier(this.Registry, buffer, document.FilePath));
 
                 document.FileActionOccurred += (s, e) => {
                     if (e.FileActionType == FileActionTypes.ContentSavedToDisk)

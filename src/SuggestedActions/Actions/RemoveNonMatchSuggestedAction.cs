@@ -11,7 +11,7 @@ namespace IgnoreFiles
 
         public RemoveNonMatchSuggestedAction(SnapshotSpan span)
         {
-            _span = span;
+            this._span = span;
         }
 
         public override string DisplayText
@@ -21,9 +21,9 @@ namespace IgnoreFiles
 
         public override void Invoke(CancellationToken cancellationToken)
         {
-            var line = _span.Snapshot.GetLineFromPosition(_span.Start.Position);
+            var line = this._span.Snapshot.GetLineFromPosition(this._span.Start.Position);
 
-            using (var edit = _span.Snapshot.TextBuffer.CreateEdit())
+            using (var edit = this._span.Snapshot.TextBuffer.CreateEdit())
             {
                 edit.Delete(line.Start.Position, line.LengthIncludingLineBreak);
                 edit.Apply();

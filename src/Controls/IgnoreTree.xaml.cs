@@ -15,33 +15,33 @@ namespace IgnoreFiles.Controls
 
         public IgnoreTree()
         {
-            InitializeComponent();
+            this.InitializeComponent();
             this.ShouldBeThemed();
         }
 
         public IgnoreTree(string directory, string pattern, Action closeAction)
             : this()
         {
-            _closeAction = closeAction;
-            ViewModel = new IgnoreTreeModel(directory, pattern);
-            CloseCommand = ActionCommand.Create(_closeAction);
-            ToggleShowAllFilesCommand = ActionCommand.Create(() => ViewModel.ShowAllFiles = !ViewModel.ShowAllFiles);
-            ToggleSyncCommand = ActionCommand.Create(() => ViewModel.SyncToSolutionExplorer = !ViewModel.SyncToSolutionExplorer);
+            this._closeAction = closeAction;
+            this.ViewModel = new IgnoreTreeModel(directory, pattern);
+            this.CloseCommand = ActionCommand.Create(this._closeAction);
+            this.ToggleShowAllFilesCommand = ActionCommand.Create(() => this.ViewModel.ShowAllFiles = !this.ViewModel.ShowAllFiles);
+            this.ToggleSyncCommand = ActionCommand.Create(() => this.ViewModel.SyncToSolutionExplorer = !this.ViewModel.SyncToSolutionExplorer);
         }
 
         public IgnoreTreeModel ViewModel
         {
-            get { return Dispatcher.Invoke(() => DataContext as IgnoreTreeModel); }
-            set { Dispatcher.Invoke(() => DataContext = value); }
+            get { return this.Dispatcher.Invoke(() => this.DataContext as IgnoreTreeModel); }
+            set { this.Dispatcher.Invoke(() => this.DataContext = value); }
         }
 
-        public bool KeepQuickInfoOpen => IsMouseOverAggregated || IsKeyboardFocusWithin || IsKeyboardFocused || IsFocused;
+        public bool KeepQuickInfoOpen => this.IsMouseOverAggregated || this.IsKeyboardFocusWithin || this.IsKeyboardFocused || this.IsFocused;
 
-        public bool IsMouseOverAggregated => IsMouseOver || IsMouseDirectlyOver;
+        public bool IsMouseOverAggregated => this.IsMouseOver || this.IsMouseDirectlyOver;
 
         private void SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            if (!ViewModel.SyncToSolutionExplorer)
+            if (!this.ViewModel.SyncToSolutionExplorer)
             {
                 return;
             }
@@ -110,14 +110,14 @@ namespace IgnoreFiles.Controls
             TreeViewItem item = sender as TreeViewItem;
             FileTreeModel model = item?.DataContext as FileTreeModel;
             model?.ItemDoubleClicked(sender, e);
-            _closeAction?.Invoke();
+            this._closeAction?.Invoke();
         }
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
             if (e.Key == Key.Escape)
             {
-                _closeAction?.Invoke();
+                this._closeAction?.Invoke();
                 e.Handled = true;
             }
         }
@@ -130,7 +130,7 @@ namespace IgnoreFiles.Controls
 
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
-            OnKeyDown(e);
+            this.OnKeyDown(e);
         }
     }
 }

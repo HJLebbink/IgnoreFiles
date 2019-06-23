@@ -27,25 +27,25 @@ namespace IgnoreFiles
 
         public IgnoreClassifier(IClassificationTypeRegistryService registry, ITextBuffer buffer, string fileName)
         {
-            _buffer = buffer;
-            _root = Path.GetDirectoryName(fileName);
-            _comment = registry.GetClassificationType(PredefinedClassificationTypeNames.Comment);
-            _path = registry.GetClassificationType(IgnoreClassificationTypes.Path);
-            _pathNoMatch = registry.GetClassificationType(IgnoreClassificationTypes.PathNoMatch);
-            _symbol = registry.GetClassificationType(IgnoreClassificationTypes.Keyword);
+            this._buffer = buffer;
+            this._root = Path.GetDirectoryName(fileName);
+            this._comment = registry.GetClassificationType(PredefinedClassificationTypeNames.Comment);
+            this._path = registry.GetClassificationType(IgnoreClassificationTypes.Path);
+            this._pathNoMatch = registry.GetClassificationType(IgnoreClassificationTypes.PathNoMatch);
+            this._symbol = registry.GetClassificationType(IgnoreClassificationTypes.Keyword);
 
-            _timer = new Timer(250);
-            _timer.Elapsed += TimerElapsed;
+            this._timer = new Timer(250);
+            this._timer.Elapsed += this.TimerElapsed;
         }
 
         public bool HasMatches(SnapshotSpan span)
         {
             try
             {
-                _isAsynchronous = false;
-                return GetClassificationSpans(span).Any(t => t.ClassificationType.IsOfType(IgnoreClassificationTypes.PathNoMatch));
+                this._isAsynchronous = false;
+                return this.GetClassificationSpans(span).Any(t => t.ClassificationType.IsOfType(IgnoreClassificationTypes.PathNoMatch));
             }
-            finally { _isAsynchronous = true; }
+            finally { this._isAsynchronous = true; }
         }
 
         public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)
@@ -62,7 +62,7 @@ namespace IgnoreFiles
             if (comment.Success)
             {
                 var result = new SnapshotSpan(span.Snapshot, span.Start + comment.Index, comment.Length);
-                list.Add(new ClassificationSpan(result, _comment));
+                list.Add(new ClassificationSpan(result, this._comment));
 
                 // Whole line is a comment, so just return here
                 if (comment.Index == 0)
@@ -72,7 +72,7 @@ namespace IgnoreFiles
             var symbolMatch = _symbolRegex.Match(text);
             if (symbolMatch.Success)
             {
-                var keyword = GetSpan(span, symbolMatch.Groups["name"], _symbol);
+                var keyword = this.GetSpan(span, symbolMatch.Groups["name"], this._symbol);
                 list.Add(keyword);
 
                 // Whole line is a symbol, so just return here
@@ -84,9 +84,9 @@ namespace IgnoreFiles
             if (!pathMatch.Success)
                 return list;
 
-            var pathType = GetPathClassificationType(pathMatch.Groups["path"].Value.Trim(), span);
+            var pathType = this.GetPathClassificationType(pathMatch.Groups["path"].Value.Trim(), span);
 
-            var path = GetSpan(span, pathMatch.Groups["path"], pathType);
+            var path = this.GetSpan(span, pathMatch.Groups["path"], pathType);
             if (path != null)
                 list.Add(path);
 
@@ -95,47 +95,47 @@ namespace IgnoreFiles
 
         public void Reset()
         {
-            if (!_isResetting)
+            if (!this._isResetting)
             {
-                _isResetting = true;
-                _cache.Clear();
-                _queue.Clear();
-                var span = new SnapshotSpan(_buffer.CurrentSnapshot, 0, _buffer.CurrentSnapshot.Length);
-                OnClassificationChanged(span);
-                _isResetting = false;
+                this._isResetting = true;
+                this._cache.Clear();
+                this._queue.Clear();
+                var span = new SnapshotSpan(this._buffer.CurrentSnapshot, 0, this._buffer.CurrentSnapshot.Length);
+                this.OnClassificationChanged(span);
+                this._isResetting = false;
             }
         }
 
         private IClassificationType GetPathClassificationType(string pattern, SnapshotSpan span)
         {
             if (pattern.StartsWith("../"))
-                return _pathNoMatch;
+                return this._pathNoMatch;
 
-            if (!_cache.ContainsKey(pattern))
+            if (!this._cache.ContainsKey(pattern))
             {
-                if (_isAsynchronous)
+                if (this._isAsynchronous)
                 {
-                    _queue.Enqueue(Tuple.Create(pattern, span));
-                    _timer.Start();
+                    this._queue.Enqueue(Tuple.Create(pattern, span));
+                    this._timer.Start();
                 }
                 else
                 {
-                    ProcessPath(pattern, span);
-                    return GetPathClassificationType(pattern, span);
+                    this.ProcessPath(pattern, span);
+                    return this.GetPathClassificationType(pattern, span);
                 }
 
-                return _path;
+                return this._path;
             }
 
-            return _cache[pattern] ? _path : _pathNoMatch;
+            return this._cache[pattern] ? this._path : this._pathNoMatch;
         }
 
         private void TimerElapsed(object sender, ElapsedEventArgs e)
         {
-            if (_queue.Count == 0)
+            if (this._queue.Count == 0)
                 return;
 
-            _timer.Stop();
+            this._timer.Stop();
 
             Task.Run(() =>
             {
@@ -143,12 +143,12 @@ namespace IgnoreFiles
                 {
                     do
                     {
-                        var t = _queue.Dequeue();
+                        var t = this._queue.Dequeue();
 
-                        if (_buffer.CurrentSnapshot.Version == t.Item2.Snapshot.Version)
-                            ProcessPath(t.Item1, t.Item2);
+                        if (this._buffer.CurrentSnapshot.Version == t.Item2.Snapshot.Version)
+                            this.ProcessPath(t.Item1, t.Item2);
 
-                    } while (_queue.Count > 0);
+                    } while (this._queue.Count > 0);
                 }
                 catch (Exception ex)
                 {
@@ -159,19 +159,19 @@ namespace IgnoreFiles
 
         private void ProcessPath(string pattern, SnapshotSpan span)
         {
-            bool hasFiles = IgnoreQuickInfo.GetFiles(_root, pattern).Any();
+            bool hasFiles = IgnoreQuickInfo.GetFiles(this._root, pattern).Any();
 
-            _cache[pattern] = hasFiles;
+            this._cache[pattern] = hasFiles;
 
             if (!hasFiles)
             {
-                OnClassificationChanged(span);
+                this.OnClassificationChanged(span);
             }
         }
 
         private void OnClassificationChanged(SnapshotSpan span)
         {
-            if (_buffer.CurrentSnapshot.Version == span.Snapshot.Version)
+            if (this._buffer.CurrentSnapshot.Version == span.Snapshot.Version)
                 ClassificationChanged?.Invoke(this, new ClassificationChangedEventArgs(span));
         }
 

@@ -21,7 +21,7 @@ namespace IgnoreFiles
         {
             ITextDocument document;
 
-            if (TextDocumentFactoryService.TryGetTextDocument(view.TextBuffer, out document))
+            if (this.TextDocumentFactoryService.TryGetTextDocument(view.TextBuffer, out document))
             {
                 return view.Properties.GetOrCreateSingletonProperty(() => new IgnoreDropHandler(view, document.FilePath));
             }

@@ -16,7 +16,7 @@ namespace IgnoreFiles.Models
             if (!comparerToUse.Equals(value, newValue))
             {
                 value = newValue;
-                OnPropertyChangedCore(propertyName);
+                this.OnPropertyChangedCore(propertyName);
                 return true;
             }
 
@@ -25,7 +25,7 @@ namespace IgnoreFiles.Models
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            OnPropertyChangedCore(propertyName);
+            this.OnPropertyChangedCore(propertyName);
         }
 
         private void OnPropertyChangedCore(string propertyName)

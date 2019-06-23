@@ -20,53 +20,53 @@ namespace IgnoreFiles.Models
 
         public IgnoreTreeModel(string rootDirectory, string pattern)
         {
-            _pattern = pattern.TrimStart('/', '\\', '!');
-            TreeRoot = FileTree.ForDirectory(rootDirectory);
-            ShouldBeVisible = CheckVisibility;
-            IsSearchMatch = f => true;
+            this._pattern = pattern.TrimStart('/', '\\', '!');
+            this.TreeRoot = FileTree.ForDirectory(rootDirectory);
+            this.ShouldBeVisible = this.CheckVisibility;
+            this.IsSearchMatch = f => true;
 
-            NodeFilter = FilterNodes;
-            FileCount = TreeRoot.AllFiles.Count(x => x.IsFile && ShouldBeVisible(x));
-            SearchIcon = WpfUtil.GetIconForImageMoniker(KnownMonikers.Search, 16, 16);
-            ShowAllFilesIcon = WpfUtil.GetIconForImageMoniker(KnownMonikers.ShowAllFiles, 16, 16);
-            SyncToSolutionExplorerIcon = WpfUtil.GetIconForImageMoniker(KnownMonikers.Sync, 16, 16);
+            this.NodeFilter = this.FilterNodes;
+            this.FileCount = this.TreeRoot.AllFiles.Count(x => x.IsFile && this.ShouldBeVisible(x));
+            this.SearchIcon = WpfUtil.GetIconForImageMoniker(KnownMonikers.Search, 16, 16);
+            this.ShowAllFilesIcon = WpfUtil.GetIconForImageMoniker(KnownMonikers.ShowAllFiles, 16, 16);
+            this.SyncToSolutionExplorerIcon = WpfUtil.GetIconForImageMoniker(KnownMonikers.Sync, 16, 16);
         }
 
         public ImageSource SyncToSolutionExplorerIcon { get; }
 
         private bool CheckVisibility(FileTreeModel arg)
         {
-            EnsureFilterRun();
-            return _visibleNodes.Contains(arg);
+            this.EnsureFilterRun();
+            return this._visibleNodes.Contains(arg);
         }
 
         private bool FilterNodes(FileTreeModel arg)
         {
-            EnsureFilterRun();
-            return _filterMatches.Contains(arg);
+            this.EnsureFilterRun();
+            return this._filterMatches.Contains(arg);
         }
 
         private void EnsureFilterRun()
         {
-            if (string.Equals(_lastSearchText, _searchText) && _lastShowAllFiles == _showAllFiles && _visibleNodes != null)
+            if (string.Equals(this._lastSearchText, this._searchText) && this._lastShowAllFiles == this._showAllFiles && this._visibleNodes != null)
             {
                 return;
             }
 
-            string searchText = _searchText;
-            bool showAllFiles = _showAllFiles;
+            string searchText = this._searchText;
+            bool showAllFiles = this._showAllFiles;
             HashSet<FileTreeModel> visibleNodes = new HashSet<FileTreeModel>();
             HashSet<FileTreeModel> filterMatches = new HashSet<FileTreeModel>();
             HashSet<FileTreeModel> directGlobMatches = new HashSet<FileTreeModel>();
 
-            foreach (FileTreeModel model in TreeRoot.AllFiles)
+            foreach (FileTreeModel model in this.TreeRoot.AllFiles)
             {
                 if (visibleNodes.Contains(model))
                 {
                     continue;
                 }
 
-                bool globMatch = Helpers.CheckGlobbing(model.FullPath, _pattern);
+                bool globMatch = Helpers.CheckGlobbing(model.FullPath, this._pattern);
 
                 if (globMatch)
                 {
@@ -152,12 +152,12 @@ namespace IgnoreFiles.Models
                 }
             }
 
-            if (string.Equals(searchText, _searchText) && showAllFiles == _showAllFiles)
+            if (string.Equals(searchText, this._searchText) && showAllFiles == this._showAllFiles)
             {
-                _filterMatches = filterMatches;
-                _visibleNodes = visibleNodes;
-                _lastShowAllFiles = showAllFiles;
-                _lastSearchText = searchText;
+                this._filterMatches = filterMatches;
+                this._visibleNodes = visibleNodes;
+                this._lastShowAllFiles = showAllFiles;
+                this._lastSearchText = searchText;
             }
         }
 
@@ -169,16 +169,16 @@ namespace IgnoreFiles.Models
 
         public bool ShowAllFiles
         {
-            get { return _showAllFiles; }
-            set { Set(ref _showAllFiles, value); }
+            get { return this._showAllFiles; }
+            set { this.Set(ref this._showAllFiles, value); }
         }
 
         public int FileCount { get; }
 
         public string SearchText
         {
-            get { return _searchText; }
-            set { Set(ref _searchText, value, StringComparer.Ordinal); }
+            get { return this._searchText; }
+            set { this.Set(ref this._searchText, value, StringComparer.Ordinal); }
         }
 
         public ImageSource SearchIcon { get; }

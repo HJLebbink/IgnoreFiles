@@ -18,7 +18,7 @@ namespace IgnoreFiles
 
         public DeleteMatchesSuggestedAction(SnapshotSpan span)
         {
-            _span = span;
+            this._span = span;
         }
 
         public override string DisplayText
@@ -40,7 +40,7 @@ namespace IgnoreFiles
             var dte = (DTE2)Package.GetGlobalService(typeof(DTE));
 
             string folder = Path.GetDirectoryName(dte.ActiveDocument.FullName);
-            string pattern = _span.GetText().Trim();
+            string pattern = this._span.GetText().Trim();
             var entries = IgnoreQuickInfo.GetFiles(folder, pattern);
 
             foreach (var entry in entries.Select(e => Path.Combine(folder, e).Replace("/", "\\")))

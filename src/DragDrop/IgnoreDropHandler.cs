@@ -15,22 +15,22 @@ namespace IgnoreFiles
 
         public IgnoreDropHandler(IWpfTextView view, string fileName)
         {
-            _view = view;
-            _documentFileName = fileName;
+            this._view = view;
+            this._documentFileName = fileName;
         }
 
         public DragDropPointerEffects HandleDataDropped(DragDropInfo dragDropInfo)
         {
             var position = dragDropInfo.VirtualBufferPosition.Position;
-            var line = _view.GetTextViewLineContainingBufferPosition(position);
-            string text = PackageUtilities.MakeRelative(_documentFileName, _draggedFileName)
+            var line = this._view.GetTextViewLineContainingBufferPosition(position);
+            string text = PackageUtilities.MakeRelative(this._documentFileName, this._draggedFileName)
                                           .Replace("\\", "/");
 
             // Insert a new line if dragged after existing text
             if (line.Start < position)
                 text = Environment.NewLine + text;
 
-            using (var edit = _view.TextBuffer.CreateEdit())
+            using (var edit = this._view.TextBuffer.CreateEdit())
             {
                 edit.Insert(position, text);
                 edit.Apply();
@@ -54,9 +54,9 @@ namespace IgnoreFiles
 
         public bool IsDropEnabled(DragDropInfo dragDropInfo)
         {
-            _draggedFileName = GetImageFilename(dragDropInfo);
+            this._draggedFileName = GetImageFilename(dragDropInfo);
 
-            return File.Exists(_draggedFileName) || Directory.Exists(_draggedFileName);
+            return File.Exists(this._draggedFileName) || Directory.Exists(this._draggedFileName);
         }
 
         private static string GetImageFilename(DragDropInfo info)

@@ -27,7 +27,7 @@ namespace IgnoreFiles
 
         public IEnumerable<string> GetIgnorePatterns()
         {
-            var raw = IgnorePatterns.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+            var raw = this.IgnorePatterns.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (string pattern in raw)
             {

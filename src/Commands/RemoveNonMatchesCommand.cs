@@ -15,11 +15,11 @@ namespace IgnoreFiles
 
         private RemoveNonMatchesCommand(OleMenuCommandService commandService, DTE2 dte)
         {
-            _dte = dte;
+            this._dte = dte;
 
             var cmdID = new CommandID(PackageGuids.guidPackageCmdSet, PackageIds.RemoveNonMatches);
-            var command = new OleMenuCommand(Execute, cmdID);
-            command.BeforeQueryStatus += BeforeQueryStatus;
+            var command = new OleMenuCommand(this.Execute, cmdID);
+            command.BeforeQueryStatus += this.BeforeQueryStatus;
             commandService.AddCommand(command);
         }
 
@@ -41,9 +41,9 @@ namespace IgnoreFiles
             var button = (OleMenuCommand)sender;
             button.Enabled = button.Visible = false;
 
-            _buffer = Helpers.GetCurentTextBuffer();
+            this._buffer = Helpers.GetCurentTextBuffer();
 
-            if (_buffer != null && _buffer.ContentType.IsOfType(IgnoreContentTypeDefinition.IgnoreContentType))
+            if (this._buffer != null && this._buffer.ContentType.IsOfType(IgnoreContentTypeDefinition.IgnoreContentType))
             {
                 button.Enabled = button.Visible = true;
             }
@@ -53,19 +53,19 @@ namespace IgnoreFiles
         {
             IgnoreClassifier classifier;
 
-            if (!_buffer.Properties.TryGetProperty(typeof(IgnoreClassifier), out classifier))
+            if (!this._buffer.Properties.TryGetProperty(typeof(IgnoreClassifier), out classifier))
                 return;
 
             int linesRemoved = 0;
 
             try
             {
-                _dte.StatusBar.Text = "Analyzing file and removing non-matches...";
-                _dte.UndoContext.Open("Removed non-matches");
+                this._dte.StatusBar.Text = "Analyzing file and removing non-matches...";
+                this._dte.UndoContext.Open("Removed non-matches");
 
-                using (var edit = _buffer.CreateEdit())
+                using (var edit = this._buffer.CreateEdit())
                 {
-                    var lines = _buffer.CurrentSnapshot.Lines.Reverse();
+                    var lines = this._buffer.CurrentSnapshot.Lines.Reverse();
 
                     foreach (var line in lines)
                     {
@@ -87,8 +87,8 @@ namespace IgnoreFiles
             }
             finally
             {
-                _dte.StatusBar.Text = $"{linesRemoved} non-matching entries removed";
-                _dte.UndoContext.Close();
+                this._dte.StatusBar.Text = $"{linesRemoved} non-matching entries removed";
+                this._dte.UndoContext.Close();
             }
         }
     }

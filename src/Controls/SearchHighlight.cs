@@ -215,9 +215,9 @@ namespace IgnoreFiles.Controls
         {
             public Range(int start, int length, string sourceString)
             {
-                Start = start;
-                Length = length;
-                SourceString = sourceString;
+                this.Start = start;
+                this.Length = length;
+                this.SourceString = sourceString;
             }
 
             public readonly int Length;
@@ -228,13 +228,13 @@ namespace IgnoreFiles.Controls
 
             public bool TryUnion(Range other, out Range composite)
             {
-                if (!string.Equals(other.SourceString, SourceString, StringComparison.Ordinal))
+                if (!string.Equals(other.SourceString, this.SourceString, StringComparison.Ordinal))
                 {
                     composite = default(Range);
                     return false;
                 }
 
-                bool isLow = Start <= other.Start;
+                bool isLow = this.Start <= other.Start;
                 Range low = isLow ? this : other;
                 Range high = isLow ? other : this;
 
@@ -254,13 +254,13 @@ namespace IgnoreFiles.Controls
                     return true;
                 }
 
-                composite = new Range(low.Start, highHigh - low.Start, SourceString);
+                composite = new Range(low.Start, highHigh - low.Start, this.SourceString);
                 return true;
             }
 
             public override string ToString()
             {
-                return SourceString.Substring(Start, Length);
+                return this.SourceString.Substring(this.Start, this.Length);
             }
         }
     }

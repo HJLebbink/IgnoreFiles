@@ -22,9 +22,9 @@ namespace IgnoreFiles
         {
             ITextDocument document;
 
-            if (TextDocumentFactoryService.TryGetTextDocument(buffer, out document))
+            if (this.TextDocumentFactoryService.TryGetTextDocument(buffer, out document))
             {
-                return buffer.Properties.GetOrCreateSingletonProperty(() => new IgnoreQuickInfo(buffer, _classifierService, document));
+                return buffer.Properties.GetOrCreateSingletonProperty(() => new IgnoreQuickInfo(buffer, this._classifierService, document));
             }
 
             return null;

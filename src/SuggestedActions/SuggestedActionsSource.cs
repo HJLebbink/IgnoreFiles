@@ -15,15 +15,15 @@ namespace IgnoreFiles
 
         public SuggestedActionsSource(SuggestedActionsSourceProvider testSuggestedActionsSourceProvider, IgnoreClassifier classifier)
         {
-            m_factory = testSuggestedActionsSourceProvider;
-            _classifier = classifier;
+            this.m_factory = testSuggestedActionsSourceProvider;
+            this._classifier = classifier;
         }
 
         public Task<bool> HasSuggestedActionsAsync(ISuggestedActionCategorySet requestedActionCategories, SnapshotSpan range, CancellationToken cancellationToken)
         {
             return Task.Factory.StartNew(() =>
             {
-                var spans = _classifier.GetClassificationSpans(range);
+                var spans = this._classifier.GetClassificationSpans(range);
 
                 if (spans.Any(s => s.ClassificationType.IsOfType(IgnoreClassificationTypes.Path) || s.ClassificationType.IsOfType(IgnoreClassificationTypes.PathNoMatch)))
                 {
@@ -36,7 +36,7 @@ namespace IgnoreFiles
 
         public IEnumerable<SuggestedActionSet> GetSuggestedActions(ISuggestedActionCategorySet requestedActionCategories, SnapshotSpan range, CancellationToken cancellationToken)
         {
-            var classifications = _classifier.GetClassificationSpans(range);
+            var classifications = this._classifier.GetClassificationSpans(range);
 
             foreach (var classification in classifications)
             {
@@ -45,14 +45,14 @@ namespace IgnoreFiles
                     var deleteMatches = new DeleteMatchesSuggestedAction(classification.Span);
                     var excludeFromProj = new ExcludeMatchesFromProjectSuggestedAction(classification.Span);
 
-                    return CreateActionSet(deleteMatches, excludeFromProj);
+                    return this.CreateActionSet(deleteMatches, excludeFromProj);
                 }
                 else if (classification.ClassificationType.IsOfType(IgnoreClassificationTypes.PathNoMatch))
                 {
                     var removeNonMatch = new RemoveNonMatchSuggestedAction(classification.Span);
                     var removeAllNonMatch = new RemoveAllNonMatchSuggestedAction(classification.Span);
 
-                    return CreateActionSet(removeNonMatch, removeAllNonMatch);
+                    return this.CreateActionSet(removeNonMatch, removeAllNonMatch);
                 }
             }
 

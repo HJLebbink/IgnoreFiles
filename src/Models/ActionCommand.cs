@@ -11,9 +11,9 @@ namespace IgnoreFiles.Models
 
         private ActionCommand(Action execute, Func<bool> canExecute, bool initialCanExecute)
         {
-            _canExecuteValue = initialCanExecute;
-            _canExecute = canExecute;
-            _execute = execute;
+            this._canExecuteValue = initialCanExecute;
+            this._canExecute = canExecute;
+            this._execute = execute;
         }
 
         public event EventHandler CanExecuteChanged;
@@ -30,25 +30,25 @@ namespace IgnoreFiles.Models
 
         public bool CanExecute(object parameter)
         {
-            if (_canExecute == null)
+            if (this._canExecute == null)
             {
                 return true;
             }
 
-            bool oldCanExecute = _canExecuteValue;
-            _canExecuteValue = _canExecute();
+            bool oldCanExecute = this._canExecuteValue;
+            this._canExecuteValue = this._canExecute();
 
-            if (oldCanExecute ^ _canExecuteValue)
+            if (oldCanExecute ^ this._canExecuteValue)
             {
-                OnCanExecuteChanged();
+                this.OnCanExecuteChanged();
             }
 
-            return _canExecuteValue;
+            return this._canExecuteValue;
         }
 
         public void Execute(object parameter)
         {
-            _execute();
+            this._execute();
         }
 
         private void OnCanExecuteChanged()
@@ -70,34 +70,34 @@ namespace IgnoreFiles.Models
 
         public ActionCommand(Action<T> execute, Func<T, bool> canExecute, bool initialCanExecute)
         {
-            _execute = execute;
-            _canExecute = canExecute;
-            _canExecuteValue = initialCanExecute;
+            this._execute = execute;
+            this._canExecute = canExecute;
+            this._canExecuteValue = initialCanExecute;
         }
 
         public event EventHandler CanExecuteChanged;
 
         public bool CanExecute(object parameter)
         {
-            if (_canExecute == null)
+            if (this._canExecute == null)
             {
                 return true;
             }
 
-            bool oldCanExecute = _canExecuteValue;
-            _canExecuteValue = _canExecute((T)parameter);
+            bool oldCanExecute = this._canExecuteValue;
+            this._canExecuteValue = this._canExecute((T)parameter);
 
-            if (oldCanExecute ^ _canExecuteValue)
+            if (oldCanExecute ^ this._canExecuteValue)
             {
-                OnCanExecuteChanged();
+                this.OnCanExecuteChanged();
             }
 
-            return _canExecuteValue;
+            return this._canExecuteValue;
         }
 
         public void Execute(object parameter)
         {
-            _execute((T)parameter);
+            this._execute((T)parameter);
         }
 
         private void OnCanExecuteChanged()

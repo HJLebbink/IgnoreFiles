@@ -16,7 +16,7 @@ namespace IgnoreFiles
 
         public EventsFilter(IVsTextView view)
         {
-            _view = view;
+            this._view = view;
         }
 
         public int QueryStatus(ref Guid pguidCmdGroup, uint cCmds, OLECMD[] prgCmds, IntPtr pCmdText)
@@ -31,7 +31,7 @@ namespace IgnoreFiles
 
         public void Remove()
         {
-            _view.RemoveCommandFilter(this);
+            this._view.RemoveCommandFilter(this);
         }
     }
 }

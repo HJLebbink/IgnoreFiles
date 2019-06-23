@@ -18,12 +18,12 @@ namespace IgnoreFiles.Models
 
         public FileTree(string rootDirectory)
         {
-            _rootDir = rootDirectory;
+            this._rootDir = rootDirectory;
         }
 
-        public IEnumerable<FileTreeModel> AllFiles => _lookup.Values;
+        public IEnumerable<FileTreeModel> AllFiles => this._lookup.Values;
 
-        public IReadOnlyList<FileTreeModel> Children => _children;
+        public IReadOnlyList<FileTreeModel> Children => this._children;
 
         public static FileTree ForDirectory(string rootDirectory)
         {
@@ -56,9 +56,9 @@ namespace IgnoreFiles.Models
 
         private void SortChildren()
         {
-            _children = _children.OrderBy(x => x.IsFile).ThenBy(x => x.Name, StringComparer.OrdinalIgnoreCase).ToList();
+            this._children = this._children.OrderBy(x => x.IsFile).ThenBy(x => x.Name, StringComparer.OrdinalIgnoreCase).ToList();
 
-            foreach (FileTreeModel child in _children.Where(x => !x.IsFile))
+            foreach (FileTreeModel child in this._children.Where(x => !x.IsFile))
             {
                 child.SortChildren();
             }
@@ -66,20 +66,20 @@ namespace IgnoreFiles.Models
 
         public FileTreeModel GetModelFor(string fullPath, bool isFile)
         {
-            if (fullPath.Length <= _rootDir.Length)
+            if (fullPath.Length <= this._rootDir.Length)
             {
                 return null;
             }
 
             FileTreeModel existingModel;
-            if (!_lookup.TryGetValue(fullPath, out existingModel))
+            if (!this._lookup.TryGetValue(fullPath, out existingModel))
             {
                 existingModel = new FileTreeModel(fullPath, this, isFile);
-                _lookup[fullPath] = existingModel;
+                this._lookup[fullPath] = existingModel;
 
                 if (existingModel.Parent == null)
                 {
-                    _children.Add(existingModel);
+                    this._children.Add(existingModel);
                 }
             }
 

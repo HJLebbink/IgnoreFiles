@@ -14,7 +14,7 @@ namespace IgnoreFiles
 
         public RemoveAllNonMatchSuggestedAction(SnapshotSpan span)
         {
-            _span = span;
+            this._span = span;
         }
 
         public override string DisplayText

@@ -52,7 +52,7 @@ namespace IgnoreFiles
             await Logger.InitializeAsync(this, Vsix.Name);
             await RemoveNonMatchesCommand.Initialize(this);
 
-            _options = (Options)GetDialogPage(typeof(Options));
+            _options = (Options)this.GetDialogPage(typeof(Options));
         }
     }
 }

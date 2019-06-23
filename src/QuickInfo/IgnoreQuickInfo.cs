@@ -18,15 +18,15 @@ namespace IgnoreFiles
 
         public IgnoreQuickInfo(ITextBuffer buffer, IClassifierAggregatorService classifier, ITextDocument document)
         {
-            _classifier = classifier.GetClassifier(buffer);
-            _root = Path.GetDirectoryName(document.FilePath);
+            this._classifier = classifier.GetClassifier(buffer);
+            this._root = Path.GetDirectoryName(document.FilePath);
         }
 
         public void AugmentQuickInfoSession(IQuickInfoSession session, IList<object> qiContent, out ITrackingSpan applicableToSpan)
         {
-            _eventsFilter?.Remove();
-            _eventsFilter = Helpers.DemandEventsFilterForCurrentNativeTextView();
-            session.Dismissed += RemoveFilter;
+            this._eventsFilter?.Remove();
+            this._eventsFilter = Helpers.DemandEventsFilterForCurrentNativeTextView();
+            session.Dismissed += this.RemoveFilter;
             applicableToSpan = null;
 
             var buffer = session.TextView.TextBuffer;
@@ -38,7 +38,7 @@ namespace IgnoreFiles
             int position = point.Value.Position;
             var line = point.Value.GetContainingLine();
             var span = new SnapshotSpan(line.Start, line.Length);
-            var tags = _classifier.GetClassificationSpans(span);
+            var tags = this._classifier.GetClassificationSpans(span);
 
             foreach (var tag in tags.Where(t => t.Span.Contains(position)))
             {
@@ -67,7 +67,7 @@ namespace IgnoreFiles
                     }
 
                     string pattern = tag.Span.GetText().Trim();
-                    IgnoreTree tree = new IgnoreTree(_root, pattern, () =>
+                    IgnoreTree tree = new IgnoreTree(this._root, pattern, () =>
                     {
                         try
                         {
@@ -99,8 +99,8 @@ namespace IgnoreFiles
 
         private void RemoveFilter(object sender, EventArgs e)
         {
-            _eventsFilter.Remove();
-            _eventsFilter = null;
+            this._eventsFilter.Remove();
+            this._eventsFilter = null;
         }
 
         public static IEnumerable<string> GetFiles(string folder, string pattern, string root = null)
